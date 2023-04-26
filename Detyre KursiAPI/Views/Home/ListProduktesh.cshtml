@@ -1,0 +1,32 @@
+﻿
+<title>Tabela</title>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
+    <table id="produkte" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Emri</th>
+                    <th>Sasia</th>
+                    <th>Cmimi</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+    </table>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js" defer></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#produkte').DataTable({
+                ajax: {
+                    url: '/api/Product',
+                    dataSrc: ''
+                },
+                columns: [
+                    { data: 'emri' },
+                    { data: 'sasia' },
+                    { data: 'cmimi' }
+                ]
+            });
+        });
+    </script>

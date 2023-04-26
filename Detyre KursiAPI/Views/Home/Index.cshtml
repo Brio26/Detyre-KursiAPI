@@ -1,0 +1,101 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="text-center container">
+    <h1 class="display-4">Dashboard</h1>
+    <div id="perdorues" style="background-color:blue;" class="rectangle"></div>
+    <div id="porosi" style="background-color:#86CEFA;" class="rectangle"></div>
+    <div id="numer" style="background-color: orange;" class="rectangle"></div>
+</div>
+<div class="container">
+<div class="chart" style="width:50%">
+    <canvas id="NumerChart"></canvas>
+</div>
+<div class="chart" style="width:50%">
+    <canvas id="MujiChart"></canvas>
+</div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+   var uri = 'api/User';
+    $(document).ready(function () {
+        $.getJSON(uri).done(function (data) {
+            $('#perdorues').text(data + ' Perdorues');
+            $.getJSON('/api/Order/Totali', function (data) {
+                $('#porosi').text('$' + data.shuma);
+                if(data.perqindja>0){
+                    $('#porosi').append(' (' + data.perqindja.toFixed(1) + '↑)');
+                }
+                $('#porosi').append('<br>Shitje');
+                $.getJSON('/api/Order', function (data) {
+                    $('#numer').append(data +'<br>Porosi');
+                    $.getJSON("api/Order/Shuma2022", function (data) {
+                        var muaji = [];
+                        var shuma = [];
+
+                        for (var i in data) {
+                            muaji.push(data[i].muaji);
+                            shuma.push(data[i].shuma);
+                        }
+                        var chartdata = {
+                            labels: muaji,
+                            datasets: [{
+                                label: 'Fitimi per cdo muaj te 2022',
+                                backgroundColor: 'lightblue',
+                                borderColor: '#46d5f1',
+                                hoverBackgroundColor: 'darkblue',
+                                hoverBorderColor: '#666666',
+                                data: shuma
+                            }]
+                        };
+
+                        var Muji_chart =$("#MujiChart");
+                        MujiChart = new Chart(Muji_chart, {
+                            type: 'line',
+                            data: chartdata,
+                            options: {
+                                maintainAspectRatio: false
+                            }
+                        });
+                        $.getJSON('/api/Order/NumerMuji', function (data) {
+                            var muaji = [];
+                            var count = [];
+
+                            for (var i in data) {
+                                muaji.push(data[i].muaji);
+                                count.push(data[i].count);
+                            }
+                            var chartData = {
+                                labels: muaji,
+                                datasets: [{
+                                    label: 'Numri i shitjeve per cdo muaj',
+                                    backgroundColor: 'lightblue',
+                                    borderColor: '#46d5f1',
+                                    hoverBackgroundColor: 'darkblue',
+                                    hoverBorderColor: '#666666',
+                                    data: count
+                                }]
+                            };
+
+                            var Numer_chart = $('#NumerChart');
+                            Numer_chart = new Chart(Numer_chart, {
+                                type: 'bar',
+                                data: chartData,
+                                options: {
+                                    maintainAspectRatio: false
+                                }
+                            });
+                        });
+
+                    });
+                      
+                });
+            });
+        });
+    });
+    </script>
+
